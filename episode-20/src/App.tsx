@@ -45,6 +45,42 @@ type ActionType =
   | { type: 'REMOVE'; id: number }
   | { type: 'DONE'; id: number };
 
+const useNumber = (initialValue: number) => useState<number>(initialValue);
+
+type UseNumberValue = ReturnType<typeof useNumber>[0];
+type UseNumbersetValue = ReturnType<typeof useNumber>[1];
+
+const Button: React.FC<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > & {
+    title?: string;
+  }
+> = ({ title, children, style, ...rest }) => (
+  <button
+    {...rest}
+    style={{
+      ...style,
+      backgroundColor: 'red',
+      color: 'white',
+      fontSize: 'xx-large',
+    }}
+  >
+    {title ?? children}
+  </button>
+);
+
+const Incrementer: React.FC<{
+  value: UseNumberValue;
+  setValue: UseNumbersetValue;
+}> = ({ value, setValue }) => (
+  <Button
+    onClick={() => setValue((state) => state + 1)}
+    title={`Add - ${value}`}
+  />
+);
+
 function App() {
   const onClickHandler = useCallback((item: string) => alert(item), []);
 
@@ -88,12 +124,15 @@ function App() {
     }
   }, []);
 
+  const [value, setValue] = useNumber(0);
+
   return (
     <div>
       <Heading title='Introduction' />
       <Box>Hello there</Box>
       <List items={['1', '2', '3']} onClick={onClickHandler} />
       <Box>{JSON.stringify(payload)}</Box>
+      <Incrementer value={value} setValue={setValue} />
       <Heading title='Todos' />
       {todos.map(({ text, id, isDone }) => (
         <div key={id}>
@@ -106,7 +145,7 @@ function App() {
 
       <div>
         <input type='text' ref={newTodoRef} />
-        <button onClick={onAddTodo}>Add new todo</button>
+        <Button onClick={onAddTodo}>Add new todo</Button>
       </div>
     </div>
   );
