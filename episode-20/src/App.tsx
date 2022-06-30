@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { useTodos } from './useTodos';
+import { TodosProvider, useAddTodo, useRemoveTodo, useTodos } from './useTodos';
 
 import './App.css';
 import { render } from '@testing-library/react';
@@ -59,13 +59,9 @@ function UL<T>({
 }
 
 function App() {
-  const { todos, addTodo, removeTodo } = useTodos([
-    {
-      id: 0,
-      text: 'initial todo',
-      isDone: false,
-    },
-  ]);
+  const todos = useTodos();
+  const addTodo = useAddTodo();
+  const removeTodo = useRemoveTodo();
 
   const newTodoRef = useRef<HTMLInputElement>(null);
 
@@ -93,10 +89,44 @@ function App() {
       />
       <div>
         <input type='text' ref={newTodoRef} />
-        <Button onClick={onAddTodo}>Add new todo</Button>
+        <Button onClick={onAddTodo}>Add todo</Button>
       </div>
     </div>
   );
 }
 
-export default App;
+const JustShowTodos = () => {
+  const todos = useTodos();
+
+  return (
+    <UL
+      items={todos}
+      itemClick={({ id }) => alert(id)}
+      render={({ text }) => text}
+    />
+  );
+};
+
+const AppWrapper = () => (
+  <TodosProvider
+    initialTodos={[
+      {
+        id: 0,
+        text: 'initial todo',
+        isDone: false,
+      },
+    ]}
+  >
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '50% 50%',
+      }}
+    >
+      <App />
+      <JustShowTodos />
+    </div>
+  </TodosProvider>
+);
+
+export default AppWrapper;
