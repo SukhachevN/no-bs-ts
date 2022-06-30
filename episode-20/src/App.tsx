@@ -1,8 +1,7 @@
 import React, { useCallback, useRef } from 'react';
-import { TodosProvider, useAddTodo, useRemoveTodo, useTodos } from './useTodos';
+import { useTodosManager } from './useTodos';
 
 import './App.css';
-import { render } from '@testing-library/react';
 
 const Heading = ({ title }: { title: string }) => <h2>{title}</h2>;
 
@@ -45,12 +44,12 @@ function UL<T>({
 > & {
   items: T[];
   render: (item: T) => React.ReactNode;
-  itemClick: (item: T) => void;
+  itemClick?: (item: T) => void;
 }) {
   return (
     <ul>
       {items.map((item, index) => (
-        <li key={index} onClick={() => itemClick(item)}>
+        <li key={index} onClick={() => itemClick?.(item)}>
           {render(item)}
         </li>
       ))}
@@ -58,10 +57,16 @@ function UL<T>({
   );
 }
 
+const initialTodos = [
+  {
+    id: 0,
+    text: 'initial todo',
+    isDone: false,
+  },
+];
+
 function App() {
-  const todos = useTodos();
-  const addTodo = useAddTodo();
-  const removeTodo = useRemoveTodo();
+  const { todos, addTodo, removeTodo } = useTodosManager(initialTodos);
 
   const newTodoRef = useRef<HTMLInputElement>(null);
 
@@ -95,38 +100,16 @@ function App() {
   );
 }
 
-const JustShowTodos = () => {
-  const todos = useTodos();
-
-  return (
-    <UL
-      items={todos}
-      itemClick={({ id }) => alert(id)}
-      render={({ text }) => text}
-    />
-  );
+const JustTodos = () => {
+  const { todos } = useTodosManager(initialTodos);
+  return <UL items={todos} render={({ text }) => text} />;
 };
 
 const AppWrapper = () => (
-  <TodosProvider
-    initialTodos={[
-      {
-        id: 0,
-        text: 'initial todo',
-        isDone: false,
-      },
-    ]}
-  >
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '50% 50%',
-      }}
-    >
-      <App />
-      <JustShowTodos />
-    </div>
-  </TodosProvider>
+  <div style={{ display: 'grid', gridTemplateColumns: '50% 50%' }}>
+    <App />
+    <JustTodos />
+  </div>
 );
 
 export default AppWrapper;
