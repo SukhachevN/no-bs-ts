@@ -1,0 +1,12 @@
+{
+  "name": "episode-34",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^18.0.0",
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4"
+  }
+}
