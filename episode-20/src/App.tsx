@@ -57,8 +57,17 @@ function UL<T>({
   );
 }
 
+const initialTodos = [
+  {
+    id: 0,
+    text: 'Xin chào',
+    isDone: false,
+  },
+];
+
 function App() {
-  const { todos, addTodo, removeTodo } = useTodos((state) => state);
+  const { isEditing, todos, addTodo, removeTodo, startWorking, endWorking } =
+    useTodos(initialTodos);
 
   const newTodoRef = useRef<HTMLInputElement>(null);
 
@@ -74,34 +83,30 @@ function App() {
       <Heading title='Introduction' />
       <Box>Hello there</Box>
       <Heading title='Todos' />
-      <UL
-        items={todos}
-        itemClick={({ id }) => alert(id)}
-        render={({ text, id }) => (
-          <>
-            {text}
-            <button onClick={() => removeTodo(id)}>Remove</button>
-          </>
-        )}
-      />
-      <div>
-        <input type='text' ref={newTodoRef} />
-        <Button onClick={onAddTodo}>Add todo</Button>
-      </div>
+      {isEditing ? (
+        <>
+          <UL
+            items={todos}
+            itemClick={({ id }) => alert(id)}
+            render={({ text, id, isDone }) => (
+              <>
+                ({isDone ? 'Done' : 'Not done'})&nbsp;
+                {text}
+                <button onClick={() => removeTodo(id)}>Remove</button>
+              </>
+            )}
+          />
+          <div>
+            <input type='text' ref={newTodoRef} />
+            <Button onClick={onAddTodo}>Add todo</Button>
+          </div>
+          <Button onClick={startWorking}>Start working</Button>
+        </>
+      ) : (
+        <Button onClick={endWorking}>Stop working</Button>
+      )}
     </div>
   );
 }
 
-const JustTodos = () => {
-  const { todos } = useTodos((state) => state);
-  return <UL items={todos} render={({ text }) => text} />;
-};
-
-const AppWrapper = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: '50% 50%' }}>
-    <App />
-    <JustTodos />
-  </div>
-);
-
-export default AppWrapper;
+export default App;
