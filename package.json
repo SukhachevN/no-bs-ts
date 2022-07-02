@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.3",
+    "react-redux": "^8.0.2",
+    "react-use": "^17.4.0",
+    "zustand": "^4.0.0-rc.1"
+  }
+}
