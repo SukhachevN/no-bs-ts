@@ -6,5 +6,5 @@ Học TypeScript với các video https://www.youtube.com/playlist?list=PLNqp92_
 
 * đã học nhiều hơn về TypeScript
 * đã nhận kinh nghiệm lập trình thực hành
-* đã học nhiều hơn về stata managers: redux-toolkit, zustand, x-state 
+* đã học nhiều hơn về state managers: redux-toolkit, zustand, x-state 
 * đã cải thiến hiểu về React-hooks: useReducer và useContext
